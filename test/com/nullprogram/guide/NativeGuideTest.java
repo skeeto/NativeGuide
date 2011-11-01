@@ -11,6 +11,7 @@ public class NativeGuideTest extends TestCase {
             prepare(LINUX_32,   root + "linux32/libguide.so");
             prepare(LINUX_64,   root + "linux64/libguide.so");
             prepare(WINDOWS_32, root + "windows32/guide.dll");
+            prepare(WINDOWS_64, root + "windows64/guide.dll");
             System.loadLibrary("guide");
         } catch (java.io.IOException e) {
             fail("Could not prepare library: " + e);
