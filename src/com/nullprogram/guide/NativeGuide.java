@@ -74,7 +74,7 @@ public final class NativeGuide {
     private static int architecture = UNKNOWN;
 
     /** Base temporary path for native libaries. */
-    private static String base;
+    private static String base = null;
 
     /** Hidden constructor. */
     private NativeGuide() {
@@ -85,6 +85,10 @@ public final class NativeGuide {
      * @throws IOException if the directory could not be prepared
      */
     private static synchronized void setUpTemp() throws IOException {
+        if (base != null) {
+            /* The work has already been done. */
+            return;
+        }
         File dir = new File(System.getProperty("java.io.tmpdir"),
                             "NativeGuide-" + System.getProperty("user.name"));
         if (dir.exists() && !dir.isDirectory()) {
