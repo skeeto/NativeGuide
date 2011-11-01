@@ -15,6 +15,19 @@ import java.util.logging.Logger;
  * classpath. The JVM is unable to load libraries from inside .jar
  * files. This class works around that by copying them out to a
  * temporary directory on the filesystem.
+ *
+ * When using this utility class, imagine you are registering all
+ * versions of your native library. It would be used like this, for
+ * example,
+ *
+ * <pre>
+ * NativeGuide.prepare(NativeGuide.LINUX_32, "x86/libexample.so");
+ * NativeGuide.prepare(NativeGuide.LINUX_64, "amd64/libexample.so");
+ * NativeGuide.prepare(NativeGuide.WINDOWS_32, "x86/example.dll");
+ * NativeGuide.prepare(NativeGuide.WINDOWS_64, "amd64/example.dll");
+ * </pre>
+ *
+ * Libraries not used by the running architecture will be ignored.
  */
 public final class NativeGuide {
 
@@ -97,7 +110,8 @@ public final class NativeGuide {
 
     /**
      * Load a native library resource by first copying it to a
-     * temporary directory.
+     * temporary directory. If the given architecture doesn't match
+     * the running system, nothing is done.
      * @param arch  the architecture of the library
      * @param path  the path to the library as a resource
      * @throws IOException if the library doesn't exist or could not load
@@ -112,8 +126,9 @@ public final class NativeGuide {
 
     /**
      * Prepare a native library to be loaded by copying it to a
-     * temporary directory. The directory is added to
-     * java.library.path.
+     * temporary directory. The directory is automatically added to
+     * java.library.path. If the given architecture doesn't match the
+     * running system, nothing is done.
      * @param arch  the architecture of the library
      * @param path  the path to the library as a resource
      * @throws IOException if the library does not exist
