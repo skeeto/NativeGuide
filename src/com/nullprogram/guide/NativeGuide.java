@@ -54,6 +54,9 @@ public final class NativeGuide {
     /** A 64-bit architecture. */
     private static final int ARCH64 = 64;
 
+    /** Path separator for this operating system. */
+    private static final String SEP = System.getProperty("path.separator");
+
     /** The determined architecture. */
     private static int architecture = UNKNOWN;
 
@@ -80,7 +83,7 @@ public final class NativeGuide {
         /* Insert this path in java.library.path. */
         String orig = System.getProperty("java.library.path");
         base = dir.getAbsolutePath();
-        System.setProperty("java.library.path", orig + ":" + base);
+        System.setProperty("java.library.path", orig + SEP + base);
 
         /* Force reread of java.library.path property. */
         try {
