@@ -23,21 +23,11 @@
 	   includeantruntime="false">
       <compilerarg value="-Xlint"/>
     </javac>
-    <copy todir="${build.classes.dir}">
-      <fileset dir="${src.dir}" excludes="**/*.java"/>
-    </copy>
   </target>
 
   <target name="jar" depends="compile"
 	  description="Generate the jarfile distributable.">
     <jar destfile="${dist.dir}/${jar.file}" basedir="${build.classes.dir}"/>
-  </target>
-
-  <target name="run" depends="jar" description="Run the application.">
-    <java jar="${dist.dir}/${jar.file}" fork="true">
-      <arg value="--name"/>
-      <arg value="Java"/>
-    </java>
   </target>
 
   <target name="clean" description="Delete all generated files.">
@@ -69,9 +59,11 @@
 
   <!-- JUnit -->
 
-  <target name="test-compile" depends="compile">
+  <target name="test-compile" depends="compile"
+	  description="Compile the tests.">
     <mkdir dir="${test.classes.dir}"/>
     <javac srcdir="${test.dir}" destdir="${test.classes.dir}"
+	   debug="on" deprecation="on"
 	   classpath="${build.classes.dir}" includeantruntime="yes">
       <compilerarg value="-Xlint"/>
     </javac>
@@ -80,7 +72,8 @@
     </copy>
   </target>
 
-  <target name="test" depends="test-compile" description="Run all tests.">
+  <target name="test" depends="test-compile"
+	  description="Run all of the tests.">
     <junit>
       <classpath>
 	<pathelement path="${build.classes.dir}"/>
