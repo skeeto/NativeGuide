@@ -41,10 +41,10 @@ public final class NativeGuide {
     private static final int BUFFER_SIZE = 1024 * 10;
 
     /** A 32-bit architecture. */
-    private static final int ARCH32 = 32;
+    private static final int BITS_32 = 32;
 
     /** A 64-bit architecture. */
-    private static final int ARCH64 = 64;
+    private static final int BITS_64 = 64;
 
     /** Path separator for this operating system. */
     private static final String SEP = System.getProperty("path.separator");
@@ -189,25 +189,25 @@ public final class NativeGuide {
      * @return the native architecture code
      */
     public static Arch getArchitecture() {
-        int bits = ARCH32;
+        int bits = BITS_32;
         if (System.getProperty("os.arch").indexOf("64") != -1) {
-            bits = ARCH64;
+            bits = BITS_64;
         }
         String os = System.getProperty("os.name");
         if (os.startsWith("Windows")) {
-            if (bits == ARCH32) {
+            if (bits == BITS_32) {
                 return Arch.WINDOWS_32;
             } else {
                 return Arch.WINDOWS_64;
             }
         } else if (os.equals("Linux")) {
-            if (bits == ARCH32) {
+            if (bits == BITS_32) {
                 return Arch.LINUX_32;
             } else {
                 return Arch.LINUX_64;
             }
         } else if (os.equals("Mac OS X")) {
-            if (bits == ARCH32) {
+            if (bits == BITS_32) {
                 return Arch.MAC_32;
             } else {
                 return Arch.MAC_64;
