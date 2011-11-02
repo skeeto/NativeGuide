@@ -13,6 +13,10 @@
   <property name="test.classes.dir" value="${build.dir}/test"/>
   <property name="dist.dir" value="dist"/>
 
+  <!-- Maven related stuff -->
+  <property name="version" value="0.1-SNAPSHOT"/>
+  <property name="artifactId" value="native-guide"/>
+
   <!-- Targets -->
 
   <target name="compile" description="Compile all source files.">
@@ -84,5 +88,29 @@
 	<fileset dir="${test.classes.dir}"/>
       </batchtest>
     </junit>
+  </target>
+
+  <!-- Maven repository -->
+
+  <target name="bundle" depends="jar,javadoc" description="Stage a bundle.">
+    <!-- Pack up the artifacts -->
+    <copy file="pom.xml"
+	  tofile="${dist.dir}/bundle/${artifactId}-${version}.pom"/>
+    <copy file="${dist.dir}/${jar.file}"
+	  tofile="${dist.dir}/bundle/${artifactId}-${version}.jar"/>
+    <jar jarfile="${dist.dir}/bundle/${artifactId}-${version}-javadoc.jar">
+      <fileset dir="${dist.dir}/javadoc"/>
+    </jar>
+    <jar jarfile="${dist.dir}/bundle/${artifactId}-${version}-sources.jar">
+      <fileset dir="${src.dir}"/>
+    </jar>
+    <!-- Sign all the things -->
+    <apply executable="gpg">
+      <arg value="--detach-sign"/>
+      <arg value="--armor"/>
+      <fileset dir="${dist.dir}/bundle"/>
+    </apply>
+    <!-- Pack it all up -->
+    <jar destfile="${dist.dir}/bundle.jar" basedir="${dist.dir}/bundle"/>
   </target>
 </project>
