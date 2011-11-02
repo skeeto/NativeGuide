@@ -6,7 +6,9 @@
   <packaging>jar</packaging>
 
   <name>NativeGuide</name>
-  <description>Helper for loading native libraries from resources.</description>
+  <description>
+    Helper for loading native libraries from resources.
+  </description>
   <url>http://nullprogram.com</url>
 
   <licenses>
