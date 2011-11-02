@@ -125,6 +125,45 @@ public final class NativeGuide {
     }
 
     /**
+     * Load a native library resource by first copying it to a
+     * temporary directory. If the given architecture doesn't match
+     * the running system, nothing is done. This method allows for
+     * non-predefined architectures.
+     * @param arch  the os.arch string
+     * @param os    the os.name string
+     * @param path  the path to the library as a resource
+     * @throws IOException if the library doesn't exist or could not load
+     */
+    public static void load(final String arch, final String os,
+                            final String path)
+        throws IOException {
+        if (isArchitecture(arch, os)) {
+            setUpTemp();
+            System.load(copyToTemp(path).getAbsolutePath());
+        }
+    }
+
+    /**
+     * Prepare a native library to be loaded by copying it to a
+     * temporary directory. The directory is automatically added to
+     * java.library.path. If the given architecture doesn't match the
+     * running system, nothing is done. This method allows for
+     * non-predefined architectures.
+     * @param arch  the os.arch string
+     * @param os    the os.name string
+     * @param path  the path to the library as a resource
+     * @throws IOException if the library does not exist
+     */
+    public static void prepare(final String arch, final String os,
+                               final String path)
+        throws IOException {
+        if (isArchitecture(arch, os)) {
+            setUpTemp();
+            copyToTemp(path);
+        }
+    }
+
+    /**
      * Copy the given resource to the temporary directory.
      * @param path  the path of the resource
      * @return the file to which it was copied
@@ -182,6 +221,17 @@ public final class NativeGuide {
             architecture = getArchitecture();
         }
         return architecture == arch;
+    }
+
+    /**
+     * Determine if the given architecture is the one being run.
+     * @param arch  the os.arch string
+     * @param os    the os.name string
+     * @return true if the given architecture matches
+     */
+    private static boolean isArchitecture(final String arch, final String os) {
+        return System.getProperty("os.arch").equals(arch)
+            && System.getProperty("os.name").equals(os);
     }
 
     /**
