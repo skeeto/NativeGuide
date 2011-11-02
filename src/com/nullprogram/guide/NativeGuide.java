@@ -21,10 +21,10 @@ import java.util.logging.Logger;
  * example,
  *
  * <pre>
- * NativeGuide.prepare(NativeGuide.LINUX_32, "x86/libexample.so");
- * NativeGuide.prepare(NativeGuide.LINUX_64, "amd64/libexample.so");
- * NativeGuide.prepare(NativeGuide.WINDOWS_32, "x86/example.dll");
- * NativeGuide.prepare(NativeGuide.WINDOWS_64, "amd64/example.dll");
+ * NativeGuide.prepare(Arch.LINUX_32, "/x86/libexample.so");
+ * NativeGuide.prepare(Arch.LINUX_64, "/amd64/libexample.so");
+ * NativeGuide.prepare(Arch.WINDOWS_32, "/x86/example.dll");
+ * NativeGuide.prepare(Arch.WINDOWS_64, "/amd64/example.dll");
  * </pre>
  *
  * Libraries not used by the running architecture will be ignored.
@@ -36,27 +36,6 @@ public final class NativeGuide {
 
     /** This class's logger. */
     private static final Logger LOG = Logger.getLogger(LOGGER_NAME);
-
-    /** 32-bit Linux. */
-    public static final int LINUX_32 = 1;
-
-    /** 64-bit Linux. */
-    public static final int LINUX_64 = 2;
-
-    /** 32-bit Microsoft Windows. */
-    public static final int WINDOWS_32 = 3;
-
-    /** 64-bit Microsoft Windows. */
-    public static final int WINDOWS_64 = 4;
-
-    /** 32-bit Mac OS X. */
-    public static final int MAC_32 = 5;
-
-    /** 64-bit Mac OS X. */
-    public static final int MAC_64 = 6;
-
-    /** Unknown architecture. */
-    public static final int UNKNOWN = 0;
 
     /** Size of the copying buffer. */
     private static final int BUFFER_SIZE = 1024 * 10;
@@ -71,7 +50,7 @@ public final class NativeGuide {
     private static final String SEP = System.getProperty("path.separator");
 
     /** The determined architecture. */
-    private static int architecture = UNKNOWN;
+    private static Arch architecture = Arch.UNKNOWN;
 
     /** Base temporary path for native libaries. */
     private static String base = null;
@@ -120,7 +99,7 @@ public final class NativeGuide {
      * @param path  the path to the library as a resource
      * @throws IOException if the library doesn't exist or could not load
      */
-    public static void load(final int arch, final String path)
+    public static void load(final Arch arch, final String path)
         throws IOException {
         if (isArchitecture(arch)) {
             setUpTemp();
@@ -137,7 +116,7 @@ public final class NativeGuide {
      * @param path  the path to the library as a resource
      * @throws IOException if the library does not exist
      */
-    public static void prepare(final int arch, final String path)
+    public static void prepare(final Arch arch, final String path)
         throws IOException {
         if (isArchitecture(arch)) {
             setUpTemp();
@@ -198,8 +177,8 @@ public final class NativeGuide {
      * @param arch  the architecture being queried
      * @return true if the given architecture matches
      */
-    private static boolean isArchitecture(final int arch) {
-        if (architecture == 0) {
+    private static boolean isArchitecture(final Arch arch) {
+        if (architecture == Arch.UNKNOWN) {
             architecture = getArchitecture();
         }
         return architecture == arch;
@@ -209,7 +188,7 @@ public final class NativeGuide {
      * Determine the JVM's native architecture.
      * @return the native architecture code
      */
-    public static int getArchitecture() {
+    public static Arch getArchitecture() {
         int bits = ARCH32;
         if (System.getProperty("os.arch").indexOf("64") != -1) {
             bits = ARCH64;
@@ -217,24 +196,24 @@ public final class NativeGuide {
         String os = System.getProperty("os.name");
         if (os.startsWith("Windows")) {
             if (bits == ARCH32) {
-                return WINDOWS_32;
+                return Arch.WINDOWS_32;
             } else {
-                return WINDOWS_64;
+                return Arch.WINDOWS_64;
             }
         } else if (os.equals("Linux")) {
             if (bits == ARCH32) {
-                return LINUX_32;
+                return Arch.LINUX_32;
             } else {
-                return LINUX_64;
+                return Arch.LINUX_64;
             }
         } else if (os.equals("Mac OS X")) {
             if (bits == ARCH32) {
-                return MAC_32;
+                return Arch.MAC_32;
             } else {
-                return MAC_64;
+                return Arch.MAC_64;
             }
         } else {
-            return UNKNOWN;
+            return Arch.UNKNOWN;
         }
     }
 }
