@@ -68,12 +68,15 @@ public final class NativeGuide {
             /* The work has already been done. */
             return;
         }
+        int suffix = (int) (Math.random() * Integer.MAX_VALUE);
         File dir = new File(System.getProperty("java.io.tmpdir"),
-                            "NativeGuide-" + System.getProperty("user.name"));
+                            "NativeGuide-" + System.getProperty("user.name") +
+                            "-" + suffix);
         if (dir.exists() && !dir.isDirectory()) {
             throw new IOException("NativeGuide directory is a file");
         } else if (!dir.exists()) {
             dir.mkdir();
+            dir.deleteOnExit();
         }
 
         /* Insert this path in java.library.path. */
