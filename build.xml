@@ -14,7 +14,7 @@
   <property name="dist.dir" value="dist"/>
 
   <!-- Maven related stuff -->
-  <property name="version" value="0.2-SNAPSHOT"/>
+  <property name="version" value="0.3-SNAPSHOT"/>
   <property name="artifactId" value="native-guide"/>
 
   <!-- Targets -->
